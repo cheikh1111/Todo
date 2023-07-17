@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/contact.css')}}">
+{% endblock %}
+
+
+{% block main_area %}
+    <div class="content">
+        <p class="heading">This Message will be redirected to my personal email : </p>
+        <form action="" method="post">
+            {{form.hidden_tag()}}
+            {{form.message.label}}
+            {{form.message()}}
+            {{form.email.label}}
+            {{form.email()}}
+            {{form.submit()}}
+        </form>
+
+    </div>
+{% endblock %}

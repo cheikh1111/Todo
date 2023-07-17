@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+{% endblock %}
+
+{% block main_area %}
+    <div class="content">
+        <h1>Login to your account : </h1>
+        <form action="" method="post" class="form">
+            {{form.hidden_tag()}}
+            <div>
+                {{form.username.label}}
+                {{form.username()}}
+            </div>
+
+            <div>
+                {{form.password.label}}
+                {{form.password()}}
+            </div>
+            <div class="submit">
+                {{form.submit()}}
+                <a  href="/login" title="login">Already Have An Account?</a>
+                
+            </div>
+        </form>
+    </div>
+{% endblock %}

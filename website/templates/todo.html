@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/todo.css')}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block main_area %}
+
+<div class="content">
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+        <div class="add-task">
+            {{form.task.label}}
+            {{form.task()}}
+            {{form.submit()}}
+        </div>
+    </form>
+    
+    {% if todo %}
+    <div class="tasks">
+        {% for task in todo %}
+        <div class="task">
+            {{task.task}}
+            <button onclick="deleteTodo({{ task.id }})">Delete</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if not todo %}
+    <div class="tasks">Your new tasks will appear here !</div>
+    {% endif %}
+    
+</div>
+
+<script src="{{url_for('static',filename='js/todo.js')}}"></script>
+{% endblock%}

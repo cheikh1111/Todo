@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css')}}">
+{% endblock%}
+
+{% block main_area%}
+<script src="{{url_for('static' , filename= 'js/hide.js')}}"></script>
+<div class="content">
+    <h2>Create New Account : </h2>
+    <form class="form" action="" method="post">
+        {{ form.hidden_tag() }}
+
+        <div class="field">
+            {{form.username.label}}
+            {{form.username()}}
+        </div>
+
+        <div class="field">
+            {{form.email.label}}
+            {{form.email()}}
+        </div>
+        <div class="field">
+            {{form.password.label}}
+            <div class="password">{{form.password}} <button onclick="togglePasswordVisibility">&#128065;</button></div>
+        </div>
+
+
+        <div class="field">
+            {{form.password_confirm.label}}
+            {{form.password_confirm()}}
+        </div>
+
+        <div class="submit">
+            {{form.submit(value="Register")}}
+            <a  href="/login" title="login">Already Have An Account?</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

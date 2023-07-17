@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block main_area %}
+    <style>
+
+        body {
+            min-height: 100%;
+            font-family: cursive;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .date{
+            display: inline-block;
+            position : absolute;
+            left : 10px ;
+            top : 50px;
+            
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column nowrap;
+            font-size: x-large;
+        }
+
+        .content a {
+            color: rgb(2, 141, 20);
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .content a:hover {
+            color: red;
+        }
+        .footer {
+            position:absolute;
+            bottom:0;
+        }
+    </style>
+    <div class="date">{{date}}</div>
+    <div class="content">
+        <div class="error">
+            404 Page Not Found
+        </div>
+
+        <div class="home">
+            Please Return To The <a href="/">Home Page</a>
+        </div>
+    </div>
+{% endblock %}

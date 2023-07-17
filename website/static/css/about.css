@@ -1,0 +1,24 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 16px;
+    letter-spacing: 1.3px;
+}
+
+h1 {
+    line-height: 50px
+}
+.main-area {
+    display: flex;
+    justify-content: center;
+}
+.content {
+    width: 80%;
+    min-height: 80vh;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: column nowrap;
+}
+
+li + li {
+    margin-top:10px
+}

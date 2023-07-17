@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is and todo app allows to easly store your task and delete them and it has way more cool features">
+    <link rel="shortcut icon" href="{{url_for('static',filename='imgs/favicon.png')}}">
+    <meta name="author" content="Cheikhsidiya med state : Dakhlet  Nouadhibou , city: Nouadhibou ">
+    <link rel="stylesheet" href="{{url_for('static',filename = 'css/main.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/master.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital@1&display=swap" rel="stylesheet">
+    <title>{{title}}</title>{% block head%}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <ul class="links">
+            {% if logged_in %}
+            <li><a href="/home">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <li><a href="/contact">Contact</a></li>
+            {% endif %}
+            {% if not logged_in  %}
+            <li><a href="/register">Register</a></li>
+            <li><a href="/login">Login</a></li>
+            {% endif %}
+            <li><a href="/about"   >About Us</a></li>
+        </ul>
+    </div>
+
+    {% with messages= get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category,message in messages%}
+    {% if category == 'error'%}
+    <div class="error message">{{ message }} </div>
+    {% endif %}
+    {% if category == 'success' %}
+    <div class="success message">{{ message }} </div>
+    {% endif %}
+    {% if category == 'info'%}
+    <div class="info message">{{message}} </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="page">
+        
+        <div class="main-area">
+            {% block main_area%}{% endblock %}
+        </div>
+        <div class="footer">
+            Made with &#10084; By Cheikhsidiya
+        </div>
+    </div>
+</body>
+</html>
