@@ -1,4 +1,4 @@
-from flask import Blueprint,jsonify,abort, render_template,session, redirect, request, flash 
+from flask import Blueprint, render_template,session, redirect, request, flash
 from werkzeug.security import generate_password_hash , check_password_hash
 from . import db
 from .models import User , Todo
@@ -108,29 +108,9 @@ def todo():
     user_id = session['user_id']
     todo = [todo for todo in User.query.get(user_id).todos][::-1]
     
-    return render_template('todo.html',title='Start Organizing your day and add your day tasks' ,form = form , todo=todo , logged_in=True , user_id = user_id)
+    return render_template('todo.html',title='Tasks' ,form = form , todo=todo , logged_in=True , user_id = user_id)
 
-# 4. delete task route
-@auth.route('/delete-todo' , methods = ['GET','POST'])
-def delete_task():
-    if  not 'user_id' in session:
-        abort(404)
-    if not request.method == 'POST':
-        task_id = request.args.get('todo_id',None)
-        if session.get('user_id',None) == Todo.query.get(task_id).user_id:
-            task = Todo.query.get(task_id)
-            db.session.delete(task)
-            db.session.commit()
-            db.session.close()
-            return jsonify({})
-        else: 
-            abort(404)
-    else : 
-        abort(404)
-
-# 5. contact route 
-
-
+# 4. Contact route
 @auth.route('/contact',methods=['GET','POST'])
 def contact():
     form = ContactForm()
@@ -167,22 +147,85 @@ def contact():
             smtp.quit()
     return render_template('contact.html',form= form , logged_in=True)
 
-# 6. api route
-@auth.route('/api')
-def api():
-    
-    if request.method == 'GET' and 'username' in  request.args and 'password' in request.args :
-        user = User.query.filter_by(username=request.args['username']).first()
-        if user :
-            if check_password_hash(user.password , request.args['password']):
-                todos = user.todos
-                todos = {id + 1 :todo.task for id , todo in enumerate(todos)}
-                return jsonify(todos)
-    return abort(404)
 
-# 7. Login out Route
+# 5. Login out Route
 @auth.route('/logout')
 def logout():
     session.clear()
     flash('You have been successfully logged out',category='info')
     return redirect('/login')
+
+
+# 6. Add todo 
+@auth.route('/add-todo',method=['POST'])
+def add():
+    todo = request.form.get('todo')
+    user_id = request.form.get('user_id')
+    if todo and user_id:
+        todo = Todo(todo=todo,user_id=user_id)
+        db.session.add(todo)
+        db.session.commit()
+        return {
+                'status' : 200,
+                'todo_id' : todo.id
+              }
+
+    return "Bad Request" , 400
+
+# 7. Complete todo
+@auth.route('/complete-todo',methods=['PUT'])
+def complete():
+    data = request.get_json()
+    todo_id = data.get('todo_id',None)
+    if todo_id :
+        task = Todo.query.get(todo_id) 
+        if task :
+            task.complete =True
+            db.session.commit()
+            db.session.close()
+            return 'Record Updated successfully! ' , 200
+
+    return "Bad Request" , 400
+
+# 8. Delete Todo
+@auth.route('/delete-todo/<int:todo_id>',methods=['DELETE'])
+def delete(todo):
+    if todo:
+        todo = Todo.query.get(todo)
+        if todo:
+            db.session.delete(todo)
+            db.session.commit()
+            db.session.close()
+            return 'Task deleted successfully! ' , 200
+    return "Bad Request" , 400
+
+
+# 9. Edit todo
+@auth.route('/edit-todo',methods=['PUT'])
+def edit():
+    data = request.get_json()
+    todo_id = data.get('todo_id',None)
+    new_todo = data.get('todo',None)
+
+    if todo_id and new_todo:
+        todo= Todo.query.get(todo_id)
+        if todo:
+            todo.todo = new_todo
+            db.session.commit()
+            db.session.close()
+            return "Todo edited successfully",200
+    
+    return "Bad Request" , 400
+
+# 10. admin route
+@auth.route('/admin')
+def admin():
+    user_id = session['user_id']
+    if user_id:
+        user = User.query.get(user_id)
+        if user and user.admin:
+            return render_template('admin.html',title='Admin Dashboard')
+
+    return "You Aren't admin",403
+
+

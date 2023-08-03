@@ -3,4 +3,4 @@ flask_sqlalchemy
 python-dotenv
 flask_wtf
 wtforms
-smtplib
+
