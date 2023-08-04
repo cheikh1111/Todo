@@ -57,5 +57,7 @@ def create_app():
     return app
 
 # Creating database and tables
-with create_app().app_context() : # Create the database in app context
+app = create_app()
+
+with app.app_context() : # Create the database in app context
     db.create_all()

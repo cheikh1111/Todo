@@ -3,6 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+<script defer src="{{url_for('static',filename='js/login.js')}}"></script>
 {% endblock %}
 
 {% block main_area %}
@@ -17,7 +18,10 @@
 
             <div>
                 {{form.password.label}}
-                {{form.password()}}
+                <div class="password">
+                    {{form.password()}}
+                    <span>show</span>
+                </div>
             </div>
             <div class="submit">
                 {{form.submit()}}

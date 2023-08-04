@@ -1,33 +1,39 @@
 {% extends 'base.html' %}
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css')}}">
+    <script defer src="{{url_for('static',filename='js/register.js')}}"></script>
 {% endblock%}
 
 {% block main_area%}
-<script src="{{url_for('static' , filename= 'js/hide.js')}}"></script>
 <div class="content">
     <h2>Create New Account : </h2>
     <form class="form" action="" method="post">
         {{ form.hidden_tag() }}
 
-        <div class="field">
+        <div>
             {{form.username.label}}
             {{form.username()}}
         </div>
 
-        <div class="field">
+        <div>
             {{form.email.label}}
             {{form.email()}}
         </div>
-        <div class="field">
+        <div>
             {{form.password.label}}
-            <div class="password">{{form.password}} <button onclick="togglePasswordVisibility">&#128065;</button></div>
+            <div class="password">
+                {{form.password}}
+                <span>show</span>
+            </div>
         </div>
 
 
-        <div class="field">
+        <div>
             {{form.password_confirm.label}}
-            {{form.password_confirm()}}
+            <div class="password">
+                {{form.password_confirm()}}
+                <span>show</span>
+            </div>
         </div>
 
         <div class="submit">

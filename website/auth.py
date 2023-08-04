@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template,session, redirect, request, flash
+from flask import Blueprint, render_template,session, redirect, request, flash, make_response
 from werkzeug.security import generate_password_hash , check_password_hash
+from sqlalchemy import or_
 from . import db
 from .models import User , Todo
 from .forms import RegisterForm,LoginForm,TodoForm,ContactForm
@@ -10,7 +11,7 @@ from dotenv import load_dotenv
 from os import path,getenv
 from datetime import datetime
 # Main Blueprint
-auth = Blueprint('authantication', __name__)
+auth = Blueprint('authentication', __name__)
 
 
 # Creating basic encryption and decryption functions 
@@ -54,11 +55,15 @@ def register():
             return redirect('/register')
         # Adding User to database
         else:
-            
-            new_user = User(username=username,password=generate_password_hash(password,method='sha256'),email=encrypt(email))
-            db.session.add(new_user)
-            db.session.commit()
-            db.session.close()
+            user = not User.query.filter(or_(User.username==username , User.email == encrypt(email)))
+            if not user:
+                new_user = User(username=username,password=generate_password_hash(password,method='sha256'),email=encrypt(email))
+                db.session.add(new_user)
+                db.session.commit()
+                db.session.close()
+            else :
+                flash('User already exists try again!',category='error')
+                return redirect('/register')
         # Redirecting User
         return redirect('/login')
     
@@ -77,13 +82,15 @@ def login():
 
         # Validating credentials
         user = User.query.filter_by(username=username).first()
-        if not user or not check_password_hash(user.password,password) :
+        if not user or not check_password_hash(user.password , password):
             flash("The provided credentials don't match our records" , category='error')
-            return redirect('login')
+            return redirect('/login')
         
         # Remembering user and loging him
         else :
             session['user_id'] = user.id
+            response = make_response(redirect('/todo'))
+            response.set_cookie('user_id',str(user.id))
             return redirect('/todo')
     logged_in = 'user_id' in session
     return render_template("login.html", title='Login To Your Account', form=form ,logged_in=logged_in)
@@ -113,40 +120,41 @@ def todo():
 # 4. Contact route
 @auth.route('/contact',methods=['GET','POST'])
 def contact():
-    form = ContactForm()
-    if not 'user_id' in session : 
-        return redirect('/login')
-    
-    if form.validate_on_submit():
-        sender_mail = User.query.get(session['user_id']).email
-        message = form.message.data
-            
-        # 1. Setting up email
-        load_dotenv(path.dirname(__file__)+'/MAIL_INFO.env')        
+    if 'user_id' in session :
+        form = ContactForm()
+        if not 'user_id' in session : 
+            return redirect('/login')
         
-        server = getenv('SERVER')
-        port = getenv('PORT')
-        user =  getenv('USER')
-        target = getenv('TARGET')
-        password = getenv('PASSWORD')
+        if form.validate_on_submit():
+            sender_mail = User.query.get(session['user_id']).email
+            message = form.message.data
+                
+            # 1. Setting up email
+            load_dotenv(path.dirname(__file__)+'/MAIL_INFO.env')        
+            
+            server = getenv('SERVER')
+            port = getenv('PORT')
+            mail = getenv('MAIL')
+            password = getenv('PASSWORD')
 
-        print(server)
-        print(port)
-        print(user)
-        print(password)
-        Message = EmailMessage()
-        Message.From = 'Message From Your Todo app'
-        Message.Subject = 'Redirecting Message From Your app'
-        Message.To = target
-        Message.set_content(f"Date : {datetime.now()} \nSender : {sender_mail} \n" + message ) 
-    
-        # Sending email 
-        with smtplib.SMTP_SSL(server , port) as smtp :
-            smtp.login(target,password)
-            smtp.send_message(user,target,message.as_string())
-            smtp.quit()
-    return render_template('contact.html',form= form , logged_in=True)
+            print(server)
+            print(port)
+            print(mail)
+            print(password)
+            Message = EmailMessage()
+            Message.From = 'Message From Your Todo app'
+            Message.Subject = 'Redirecting Message From Your app'
+            Message.To = mail
+            Message.set_content(f"Date : {datetime.now()} \nSender : {sender_mail} \n" + message ) 
+        
+            # Sending email 
+            with smtplib.SMTP_SSL(server , port) as smtp :
+                smtp.login(mail,password)
+                smtp.send_message(mail,mail,message.as_string())
+                smtp.quit()
+        return render_template('contact.html',form= form , logged_in=True)
 
+    return 'Please login to access this page' , 403
 
 # 5. Login out Route
 @auth.route('/logout')
@@ -157,7 +165,7 @@ def logout():
 
 
 # 6. Add todo 
-@auth.route('/add-todo',method=['POST'])
+@auth.route('/add-todo',methods=['POST'])
 def add():
     todo = request.form.get('todo')
     user_id = request.form.get('user_id')
@@ -220,7 +228,7 @@ def edit():
 # 10. admin route
 @auth.route('/admin')
 def admin():
-    user_id = session['user_id']
+    user_id = session.get('user_id',None)
     if user_id:
         user = User.query.get(user_id)
         if user and user.admin:

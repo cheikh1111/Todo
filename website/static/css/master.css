@@ -19,7 +19,7 @@ body {
 	width: 100%;
 	height: 50px;
 	font-weight: bold;
-	font-family: cursive;
+	font-family: 'Courier New', Courier, monospace;
 	margin:-20px auto 30px auto;
 	display: flex;
 	justify-content: space-between;
@@ -54,7 +54,7 @@ body {
 .header {
 	background-color: #003471;
 	width: 100%;
-	font-family: 'Oswald', sans-serif;
+	font-family: 'Courier New', Courier, monospace;
 	font-weight: 400;
 	margin-top: 0;
 	margin-bottom: 20px;
@@ -64,6 +64,7 @@ body {
 	align-items: center;
 	position: sticky;
 	top: 0;
+	font-weight: 600;
 
 }
 
@@ -93,7 +94,7 @@ body {
 
 .header .links a:hover {
 
-	color: red
+	color: rgb(59, 245, 17)
 }
 
 .footer {
@@ -109,4 +110,19 @@ body {
 	margin-bottom: 7px;
 	font-family: cursive;
 
+}
+
+
+@media only screen and (max-width: 700px) {
+	.header .links {
+		width: 100%;
+		margin: 0 auto;
+	}
+
+}
+
+@media only screen and (min-width: 1200px) {
+	.header .links {
+		width: 25%;
+	}
 }

@@ -6,7 +6,7 @@ from wtforms.validators import InputRequired , Length
 # 1. LoginForm  
 class LoginForm(FlaskForm):
     username = StringField('Username : ',validators=[InputRequired('Please fill out this field'),Length(min=2,max=25,message='The field lenght must be in the following range 2~20')],render_kw={'placeholder': 'Username'})
-    password = PasswordField('Password : ' ,validators=[InputRequired('Please fill out this field'),Length(min=2,max=25,message='The field lenght must be in the following range 2~20')] ,render_kw={'Placeholder' : 'Password','class':'PasswordInput'})
+    password = PasswordField('Password : ' ,validators=[InputRequired('Please fill out this field'),Length(min=2,max=25,message='The field lenght must be in the following range 2~20')] ,render_kw={'placeholder' : 'Password'})
     submit   = SubmitField('Login')
 # 2.SignupForm
 class RegisterForm(FlaskForm) :
