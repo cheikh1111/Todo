@@ -108,7 +108,7 @@ def todo():
         return redirect('/login')
     # handling POST Request44
     elif form.validate_on_submit() : 
-        task = Todo(task=form.task.data,user_id=session['user_id'])
+        task = Todo(todo=form.task.data,user_id=session['user_id'])
         db.session.add(task)
         db.session.commit()
         db.session.close()
