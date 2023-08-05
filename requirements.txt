@@ -4,3 +4,4 @@ python-dotenv
 flask_wtf
 wtforms
 psycopg2-binary
+flask_socketio

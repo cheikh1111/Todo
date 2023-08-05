@@ -2,7 +2,7 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .content .form {

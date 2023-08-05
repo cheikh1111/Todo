@@ -10,6 +10,7 @@ from string import ascii_letters  , punctuation
 from dotenv import load_dotenv
 from os import path,getenv
 from datetime import datetime
+
 # Main Blueprint
 auth = Blueprint('authentication', __name__)
 
@@ -74,6 +75,7 @@ def register():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    admin = False
     # Handling post request
     if form.validate_on_submit():
         # Getting username and password from form
@@ -85,15 +87,19 @@ def login():
         if not user or not check_password_hash(user.password , password):
             flash("The provided credentials don't match our records" , category='error')
             return redirect('/login')
-        
+    
         # Remembering user and loging him
         else :
             session['user_id'] = user.id
             response = make_response(redirect('/todo'))
             response.set_cookie('user_id',str(user.id))
-            return redirect('/todo')
+        
+        # Checking if the user is admin
+        if user.is_admin :
+            admin=True
+        return redirect('/todo')
     logged_in = 'user_id' in session
-    return render_template("login.html", title='Login To Your Account', form=form ,logged_in=logged_in)
+    return render_template("login.html", title='Login To Your Account', form=form ,logged_in=logged_in,admin=admin)
 
 
 
@@ -113,9 +119,10 @@ def todo():
         db.session.commit()
         db.session.close()
     user_id = session['user_id']
-    todo = [todo for todo in User.query.get(user_id).todos][::-1]
-    
-    return render_template('todo.html',title='Tasks' ,form = form , todo=todo , logged_in=True , user_id = user_id)
+    user = User.query.get(user_id)
+    todo = [todo for todo in user.todos][::-1]
+    admin = user.is_admin
+    return render_template('todo.html',title='Tasks' ,form = form , todo=todo , logged_in=True ,admin=admin )
 
 # 4. Contact route
 @auth.route('/contact',methods=['GET','POST'])
@@ -146,15 +153,19 @@ def contact():
             Message.Subject = 'Redirecting Message From Your app'
             Message.To = mail
             Message.set_content(f"Date : {datetime.now()} \nSender : {sender_mail} \n" + message ) 
-        
-            # Sending email 
-            with smtplib.SMTP_SSL(server , port) as smtp :
-                smtp.login(mail,password)
-                smtp.send_message(mail,mail,message.as_string())
-                smtp.quit()
-        return render_template('contact.html',form= form , logged_in=True)
 
-    return 'Please login to access this page' , 403
+            # Sending email 
+            with smtplib.SMTP_SSL(server , port ) as smtp :
+
+                smtp.login(mail,password)
+                smtp.send_message(mail,mail,Message)
+                smtp.quit()
+            flash('Message sent successfully !',category='success')
+            return render_template('contact.html',form=form,logged_in = True)
+        flash('This message will be redirected to my email',category='info')
+        return render_template('contact.html',form= form , logged_in=True, admin = User.query.get(session.get('user_id')).is_admin)
+
+    return '<h1>403 Please login to access this page</h1>' , 403
 
 # 5. Login out Route
 @auth.route('/logout')
@@ -178,7 +189,7 @@ def add():
                 'todo_id' : todo.id
               }
 
-    return "Bad Request" , 400
+    return "<h1>400 Bad request </h1>" , 400
 
 # 7. Complete todo
 @auth.route('/complete-todo',methods=['PUT'])
@@ -193,7 +204,7 @@ def complete():
             db.session.close()
             return 'Record Updated successfully! ' , 200
 
-    return "Bad Request" , 400
+    return "<h1>400 Bad request </h1>" , 400
 
 # 8. Delete Todo
 @auth.route('/delete-todo/<int:todo_id>',methods=['DELETE'])
@@ -205,7 +216,7 @@ def delete(todo):
             db.session.commit()
             db.session.close()
             return 'Task deleted successfully! ' , 200
-    return "Bad Request" , 400
+    return "<h1>400 Bad request </h1>" , 400
 
 
 # 9. Edit todo
@@ -223,17 +234,26 @@ def edit():
             db.session.close()
             return "Todo edited successfully",200
     
-    return "Bad Request" , 400
+        return "<h1>400 Bad request </h1>" , 400
+
 
 # 10. admin route
+
+def is_admin():
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    return user.is_admin
+
+
+
 @auth.route('/admin')
 def admin():
     user_id = session.get('user_id',None)
     if user_id:
         user = User.query.get(user_id)
-        if user and user.admin:
-            return render_template('admin.html',title='Admin Dashboard')
+        if user and user.is_admin:
+            return render_template('admin.html',title='Admin Dashboard',admin=True)
 
-    return "You Aren't admin",403
+    return "<h1>403 Forbidden</h1>",403
 
 

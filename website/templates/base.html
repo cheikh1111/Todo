@@ -17,15 +17,18 @@
     <div class="header">
         <ul class="links">
             {% if logged_in %}
-            <li><a href="/home">Home</a></li>
-            <li><a href="/logout">Logout</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/home" title="Home">Home</a></li>
+            <li><a href="/logout" title="Logout">Logout</a></li>
+            <li><a href="/contact" title="Contact us">Contact</a></li>
             {% endif %}
             {% if not logged_in  %}
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
+            <li><a href="/register" title="Create new account">Register</a></li>
+            <li><a href="/login" title="Login to your account">Login</a></li>
             {% endif %}
-            <li><a href="/about"   >About Us</a></li>
+            <li><a href="/about" title="About us" >About Us</a></li>
+            {%if admin%}
+            <li><a href="/admin" title="Admin Dashboard">Dashboard</a></li>
+            {% endif %}
         </ul>
     </div>
 
@@ -51,7 +54,7 @@
             {% block main_area%}{% endblock %}
         </div>
         <div class="footer">
-            Made with &#10084; By Cheikhsidiya
+            By Cheikhsidiya
         </div>
     </div>
 </body>

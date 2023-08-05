@@ -23,7 +23,7 @@
     <div class="tasks">
         {% for task in todo %}
         <div class="task">
-            {{task.task}}
+            {{task.todo}}
             <button onclick="deleteTodo({{ task.id }})">Delete</button>
         </div>
         {% endfor %}

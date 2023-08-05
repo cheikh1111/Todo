@@ -19,6 +19,3 @@ h1 {
     flex-flow: column nowrap;
 }
 
-li + li {
-    margin-top:10px
-}

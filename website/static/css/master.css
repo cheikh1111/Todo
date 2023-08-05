@@ -89,7 +89,7 @@ body {
 .header .links a {
 	color: #c1c8c8;
 	text-decoration: none;
-	transition: 0.3
+	transition: 0.3s;
 }
 
 .header .links a:hover {
