@@ -1,16 +1,14 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 16px;
-    letter-spacing: 1.3px;
+body{font-family: 'Courier New', Courier, monospace;}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }
 
-h1 {
-    line-height: 50px
-}
-.main-area {
-    display: flex;
-    justify-content: center;
-}
+.main-area {display: flex;justify-content: center}
 .content {
     width: 80%;
     min-height: 80vh;
@@ -19,3 +17,8 @@ h1 {
     flex-flow: column nowrap;
 }
 
+h1{padding-left: 10px}
+.content div {background-color: #f6f6f6;margin:30px 0;padding: 10px;}
+.content div p {display:flex;justify-content: space-between;align-items: center}
+.content div ul {font-family: 'Borel',cursive;list-style: none;display: none;padding-top: 10px}
+.content div:hover ul {display: block}
