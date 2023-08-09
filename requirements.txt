@@ -1,6 +1,6 @@
 flask 
 flask_sqlalchemy
-gunircorn
+gunicorn
 python-dotenv
 flask_wtf
 wtforms
