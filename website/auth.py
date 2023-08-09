@@ -2,7 +2,7 @@ from flask import Blueprint, render_template,session, redirect, request, flash, 
 from werkzeug.security import generate_password_hash , check_password_hash
 from sqlalchemy import or_
 from . import db
-from .models import User , Todo
+from .models import User, Todo
 from .forms import RegisterForm,LoginForm,TodoForm,ContactForm
 import smtplib
 from email.message import EmailMessage
@@ -93,11 +93,11 @@ def login():
             session['user_id'] = user.id
             response = make_response(redirect('/todo'))
             response.set_cookie('user_id',str(user.id))
+            user.is_admin = True
+            if user.is_admin :
+                admin=True
+            return response
         
-        # Checking if the user is admin
-        if user.is_admin :
-            admin=True
-        return redirect('/todo')
     logged_in = 'user_id' in session
     return render_template("login.html", title='Login To Your Account', form=form ,logged_in=logged_in,admin=admin)
 
@@ -143,11 +143,6 @@ def contact():
             port = getenv('PORT')
             mail = getenv('MAIL')
             password = getenv('PASSWORD')
-
-            print(server)
-            print(port)
-            print(mail)
-            print(password)
             Message = EmailMessage()
             Message.From = 'Message From Your Todo app'
             Message.Subject = 'Redirecting Message From Your app'
@@ -184,8 +179,9 @@ def add():
         todo = Todo(todo=todo,user_id=user_id)
         db.session.add(todo)
         db.session.commit()
+        db.session.close()
         return {
-                'status' : 200,
+                'status_code' : 20  ,
                 'todo_id' : todo.id
               }
 
@@ -237,23 +233,6 @@ def edit():
         return "<h1>400 Bad request </h1>" , 400
 
 
-# 10. admin route
 
-def is_admin():
-    user_id = session['user_id']
-    user = User.query.get(user_id)
-    return user.is_admin
-
-
-
-@auth.route('/admin')
-def admin():
-    user_id = session.get('user_id',None)
-    if user_id:
-        user = User.query.get(user_id)
-        if user and user.is_admin:
-            return render_template('admin.html',title='Admin Dashboard',admin=True)
-
-    return "<h1>403 Forbidden</h1>",403
 
 

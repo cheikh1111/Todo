@@ -32,6 +32,7 @@ def create_app():
     
     # configuring SQLALCHEMY Data base and changing the default sqlconnector to pymysql
     SQLALCHEMY_DATABASE_URI= f"{os.getenv('DB_URI')}"
+    SQLALCHEMY_DATABASE_URI= "sqlite:///users.db"
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI # Uniform Resource Identifier
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
@@ -41,6 +42,7 @@ def create_app():
     # Importing Blueprints
     from .views import views
     from .auth import auth
+    from .admin import admin
 
     # Protecting Blueprints against CSRF Attacks
     csrf=CSRFProtect(app)
@@ -50,6 +52,7 @@ def create_app():
     # Registering blueprints
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth,url_prefix='/')
+    app.register_blueprint(admin,url_prefix='/admin')
 
     # importing models
     from .models import User , Todo

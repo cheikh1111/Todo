@@ -5,10 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}}</title>
         <meta name="author" content="Cheikhsidiya">
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" 
-        crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+        <link rel="stylesheet" href="{{url_for('static',filename='css/users.css')}}">
         <script defer type="text/javascript" src="{{url_for('static',filename='js/admin.js')}}"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -35,24 +32,29 @@
                                 <span class="material-symbols-outlined"><a href="/logout">logout</a></span>
                                 
                         </header>
-                        <div></div>
-                        <div class="analytics">
-                                <div class="card">
-                                        <div>Server Date & time</div>
-                                        <strong style="font-size: larger;">{{date}}</strong>
-                                </div>
-                                <div class="card">
-                                        <div><a href="users">Users</a></div>
-                                        <div><h1>{{users_num}}</h1></div>
-                                </div>
-                                <div class="card">
-                                        <div><a href="todos">Todos</a></div>
-                                        <div><h1>{{todos_num}}</h1></div>
-                                </div>
-                                
 
-                        </div>
-
+                        <table>
+                                <thead>
+                                        <tr>
+                                                <th>ID</th>
+                                                <th>Todo</th>
+                                                <th>User Id</th>
+                                                <th>Date</th>
+                                                <th>Completed</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        {% for todo in Todos%}
+                                        <tr>
+                                                <td>{{todo.id}}</td>
+                                                <td>{{todo.todo}}</td>
+                                                <td>{{todo.user_id}}</td>
+                                                <td>{{todo.created_at}}</td>
+                                                <td>{{todo.completed}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
                 </div>
         </div>
 

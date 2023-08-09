@@ -81,6 +81,8 @@
         width: 100%;
     }
 
+    .password{width:100%}
+
     .content .form .submit{
             flex-flow: column nowrap;
             align-items: center;

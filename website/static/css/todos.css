@@ -1,0 +1,41 @@
+*,*::before,*::after{box-sizing: border-box;margin: 0;padding: 0;}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 200,
+  'opsz' 40;
+  cursor:pointer;
+}
+
+
+.main{display: flex}
+.content{flex-grow:1;min-width: 550px;background-color:  #f1f5f9;min-height: 1200px;width: 100%}
+body{font-family: 'Courier New', Courier, monospace}
+header a {text-decoration:none;color: #624cff;}
+ul {list-style:none}
+:root{--mainColor : #222b36}
+aside {background-color: var(--mainColor);min-height:100vh;width:250px;min-width: 230px;padding-top: 10px;font-family: Tahoma,Arial,sans-serif;}
+aside .links{height:10%;width:100%;padding-left:10px;padding-top: 30px;}
+aside .links ul{display:flex;justify-content: space-around;flex-grow: 1;flex-flow: column nowrap;height:100%}
+aside a {color:#919eab;transition: ease-in;text-decoration: none}
+aside a.active {color: #f4f6f8}
+aside a:hover{color:#f4f6f8}
+aside .links > a{display: flex;align-items: center;margin-bottom: 30px}
+header {display:flex;justify-content: space-between;align-items: center;padding: 0 4px;height:60px;position:sticky;top: 0;background-color: white;margin-bottom: 50px}
+table{font-family: Tahoma,Arial, Helvetica, sans-serif;border: 1px solid black;width: 98%; margin-inline:auto;border-spacing: 0px;}
+table th{background-color: black;color: white;font-weight: bold;padding: 6px}
+table tr{background: #fff}
+table tr:nth-child(even){background-color: #f5efefee;}
+table td {
+  padding: 6px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid black;
+}
+@media screen and (max-width:800px){
+  aside{display:none}
+  table{width:100%;font-size: 12px;}
+  table td , table th {padding:4px}
+}

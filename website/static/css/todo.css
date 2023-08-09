@@ -91,10 +91,17 @@ form .add-task input:focus {
     justify-content: center;
     align-items: center;
     flex-flow: column nowrap;
-    background-color: red;
     color: white;
+    width: 70px;
+    padding: 3px;
     cursor: pointer;
 }
+.tasks .task p{flex-grow: 1}
+.task .controls{display:flex;align-items:center;margin-left: 4px;margin-right:4px;}
+.task .controls .delete{background-color: red;}
+.task .controls .edit{background-color: #133ae8;}
+.task .controls .complete{background-color: #30ba4e;}
+.task .controls button + button{margin-left:4px}
 
 @media screen and (max-width: 768px){
     

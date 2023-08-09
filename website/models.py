@@ -23,4 +23,3 @@ class Todo(db.Model):
     completed = db.Column(db.Boolean,default=False,nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     
-

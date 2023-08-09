@@ -1,5 +1,7 @@
 * {
 	box-sizing: border-box;
+	margin: 0;
+	padding:0
 }
 
 html {
@@ -53,7 +55,7 @@ body {
 
 .header {
 	background-color: #003471;
-	width: 100%;
+	width: 100vw;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: 400;
 	margin-top: 0;
@@ -113,16 +115,18 @@ body {
 }
 
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 768px) {
 	.header .links {
 		width: 100%;
 		margin: 0 auto;
 	}
 
+	.message{font-size: 14px;}
+
 }
 
 @media only screen and (min-width: 1200px) {
 	.header .links {
-		width: 25%;
+		width: 30%;
 	}
 }
