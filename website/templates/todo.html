@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='css/todo.css')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script defer src="{{url_for('static',filename='js/todo.js')}}"></script>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
 {% endblock %}
 
@@ -22,15 +23,28 @@
     {% if todo %}
     <div class="tasks">
         {% for task in todo %}
+        {% if task.completed %}
+        <div todo_id="{{task.id}}" class="task completed">
+            <p>{{task.todo}}</p>
+            <div class="controls">
+                <button class="complete">Completed</button>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+            </div>
+
+        </div>
+        {% endif %}
+        {% if not task.completed%}
         <div todo_id="{{task.id}}" class="task">
             <p>{{task.todo}}</p>
             <div class="controls">
                 <button class="complete">Completed</button>
                 <button class="edit">Edit</button>
-                <button class="delete" onclick="deleteTodo({{ task.id }})">Delete</button>
+                <button class="delete">Delete</button>
             </div>
 
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     {% endif %}
@@ -40,5 +54,4 @@
 
 </div>
 
-<script src="{{url_for('static',filename='js/todo.js')}}"></script>
 {% endblock%}
